@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wallets
+spec:
+  selector:
+    matchLabels:
+      app: wallets
+  template:
+    metadata:
+      labels:
+        app: wallets
+    spec:
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: wallets-media-pvc
+        - name: static
+          persistentVolumeClaim:
+            claimName: wallets-static-pvc
+      containers:
+      - name: wallets
+        image: ghcr.io/pablo-moreno/wallets/wallets:latest
+        workingDir: /app
+        envFrom:
+          - secretRef:
+              name: wallets-secrets
+        command: ["uvicorn", "--workers", "1", "--host", "0.0.0.0", "--port", "8000", "config.asgi:application"]
+        volumeMounts:
+          - mountPath: /app/media
+            name: media
+          - mountPath: /app/static
+            name: static
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8000

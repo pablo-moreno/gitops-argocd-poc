@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres
+  namespace: argo-cd
+spec:
+  destination:
+    namespace: postgres
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: postgresql
+    helm:
+      parameters:
+      - name: auth.password
+        value: password
+      - name: auth.postgresPassword
+        value: password
+      - name: auth.username
+        value: wallets
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 11.6.3
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true

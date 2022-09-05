@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wallets-migrations
+spec:
+  ttlSecondsAfterFinished: 20
+  template:
+    spec:
+      containers:
+      - name: wallets-migrations
+        image: ghcr.io/pablo-moreno/wallets/wallets:latest
+        envFrom:
+          - secretRef:
+              name: wallets-secrets
+        command: ["python",  "manage.py", "migrate"]
+      restartPolicy: Never
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wallets-collectstatic
+spec:
+  ttlSecondsAfterFinished: 20
+  template:
+    spec:
+      volumes:
+        - name: static
+          persistentVolumeClaim:
+            claimName: wallets-static-pvc
+      containers:
+      - name: wallets-collectstatic
+        image: ghcr.io/pablo-moreno/wallets/wallets:latest
+        envFrom:
+          - secretRef:
+              name: wallets-secrets
+        command: ["python",  "manage.py", "collectstatic", "--noinput"]
+        volumeMounts:
+          - mountPath: /app/static
+            name: static
+      restartPolicy: Never
