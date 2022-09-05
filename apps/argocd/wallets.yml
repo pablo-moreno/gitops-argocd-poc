@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wallets
+  namespace: argo-cd
+spec:
+  destination:
+    namespace: wallets
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: apps/wallets/overlays/local
+    repoURL: https://github.com/pablo-moreno/gitops-argocd-poc.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}
+    syncOptions:
+    - CreateNamespace=true

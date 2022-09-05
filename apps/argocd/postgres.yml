@@ -14,8 +14,6 @@ spec:
       parameters:
       - name: auth.password
         value: password
-      - name: auth.postgresPassword
-        value: password
       - name: auth.username
         value: wallets
     repoURL: https://charts.bitnami.com/bitnami
