@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+        - name: static
+          persistentVolumeClaim:
+            claimName: wallets-static-pvc
+        - name: media
+          persistentVolumeClaim:
+            claimName: wallets-media-pvc
+      containers:
+      - name: nginx
+        image: k8s.gcr.io/nginx-slim:0.8
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: static
+          mountPath: /usr/share/nginx/html/static
+        - name: media
+          mountPath: /usr/share/nginx/html/media
+        resources:
+          limits:
+            cpu: 250m
+            memory: 256Mi

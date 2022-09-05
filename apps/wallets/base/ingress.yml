@@ -16,3 +16,17 @@ spec:
             name: wallets
             port: 
               number: 8000
+      - pathType: Prefix
+        path: "/static/"
+        backend:
+          service:
+            name: nginx
+            port:
+              number: 80
+      - pathType: Prefix
+        path: "/media/"
+        backend:
+          service:
+            name: nginx
+            port:
+              number: 80

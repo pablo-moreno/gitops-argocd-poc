@@ -7,3 +7,4 @@ resources:
   - "jobs.yml"
   - "service.yml"
   - "pvc.yml"
+  - "nginx.yml"
